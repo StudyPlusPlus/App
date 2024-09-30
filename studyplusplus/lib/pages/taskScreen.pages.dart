@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:studyplusplus/pages/login.page.dart';
 import 'addTask.pages.dart';
 
 class TaskScreen extends StatefulWidget {
@@ -38,9 +39,18 @@ class _TaskScreenState extends State<TaskScreen> {
         actions: [
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: CircleAvatar(
-              backgroundImage: NetworkImage(
-                  'https://example.com/avatar.jpg'), // Replace with your image URL
+            child: GestureDetector(
+              onTap: () {
+                // Aqui, o usuário clica no avatar e é levado para a página de login
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => LoginPage()),
+                );
+              },
+              child: CircleAvatar(
+                backgroundImage: NetworkImage(
+                    'https://example.com/avatar.jpg'), // Troque pela sua URL de imagem
+              ),
             ),
           ),
         ],
@@ -113,7 +123,8 @@ class _TaskScreenState extends State<TaskScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('${(_calculateCompletionPercentage(_todayTasks) * 3).toInt()}/3 Task Completed'),
+            Text(
+                '${(_calculateCompletionPercentage(_todayTasks) * 3).toInt()}/3 Task Completed'),
             Text('${(progress * 100).toInt()}%'),
           ],
         ),
@@ -145,12 +156,14 @@ class _TaskScreenState extends State<TaskScreen> {
   }
 
   // Function to build a task list
-  Widget _buildTaskList(BuildContext context, List<Map<String, dynamic>> tasks) {
+  Widget _buildTaskList(
+      BuildContext context, List<Map<String, dynamic>> tasks) {
     return Column(
       children: tasks.map((task) {
         return Card(
           color: Colors.black26,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           child: ListTile(
             title: Text(task['name']),
             subtitle: Text(task['date']),
