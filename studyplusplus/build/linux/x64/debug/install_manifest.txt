@@ -1,0 +1,14 @@
+/home/lucas/PC-HOME/App/studyplusplus/build/linux/x64/debug/bundle/studyplusplus
+/home/lucas/PC-HOME/App/studyplusplus/build/linux/x64/debug/bundle/data/icudtl.dat
+/home/lucas/PC-HOME/App/studyplusplus/build/linux/x64/debug/bundle/lib/libflutter_linux_gtk.so
+/home/lucas/PC-HOME/App/studyplusplus/build/linux/x64/debug/bundle/data/flutter_assets/AssetManifest.json
+/home/lucas/PC-HOME/App/studyplusplus/build/linux/x64/debug/bundle/data/flutter_assets/shaders/ink_sparkle.frag
+/home/lucas/PC-HOME/App/studyplusplus/build/linux/x64/debug/bundle/data/flutter_assets/packages/cupertino_icons/assets/CupertinoIcons.ttf
+/home/lucas/PC-HOME/App/studyplusplus/build/linux/x64/debug/bundle/data/flutter_assets/NOTICES
+/home/lucas/PC-HOME/App/studyplusplus/build/linux/x64/debug/bundle/data/flutter_assets/NOTICES.Z
+/home/lucas/PC-HOME/App/studyplusplus/build/linux/x64/debug/bundle/data/flutter_assets/AssetManifest.bin
+/home/lucas/PC-HOME/App/studyplusplus/build/linux/x64/debug/bundle/data/flutter_assets/fonts/MaterialIcons-Regular.otf
+/home/lucas/PC-HOME/App/studyplusplus/build/linux/x64/debug/bundle/data/flutter_assets/kernel_blob.bin
+/home/lucas/PC-HOME/App/studyplusplus/build/linux/x64/debug/bundle/data/flutter_assets/AssetManifest.bin.json
+/home/lucas/PC-HOME/App/studyplusplus/build/linux/x64/debug/bundle/data/flutter_assets/FontManifest.json
+/home/lucas/PC-HOME/App/studyplusplus/build/linux/x64/debug/bundle/data/flutter_assets/version.json
