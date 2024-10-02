@@ -69,7 +69,7 @@ class LoginPage extends StatelessWidget {
                 },
                 child: Text(
                   'Forgot Password?',
-                  style: TextStyle(color: Colors.blue),
+                  style: TextStyle(color: Colors.purple),
                 ),
               ),
             ),
@@ -79,7 +79,7 @@ class LoginPage extends StatelessWidget {
                 // Ação de login
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue, // Cor do botão de login
+                backgroundColor: Colors.purple, // Cor do botão de login
                 padding: EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -108,7 +108,7 @@ class LoginPage extends StatelessWidget {
                 },
                 child: Text(
                   'Sign Up',
-                  style: TextStyle(color: Colors.blue),
+                  style: TextStyle(color: Colors.purple),
                 ),
               ),
             ),

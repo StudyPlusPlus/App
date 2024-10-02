@@ -36,7 +36,7 @@ class SignUpPage extends StatelessWidget {
               decoration: InputDecoration(
                 hintText: 'Name',
                 filled: true,
-                fillColor: Colors.grey[850],
+                fillColor: Colors.purpleAccent[850],
                 hintStyle: TextStyle(color: Colors.white70),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -65,7 +65,7 @@ class SignUpPage extends StatelessWidget {
               decoration: InputDecoration(
                 hintText: 'Password',
                 filled: true,
-                fillColor: Colors.grey[850],
+                fillColor: Colors.purple[850],
                 hintStyle: TextStyle(color: Colors.white70),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -99,7 +99,7 @@ class SignUpPage extends StatelessWidget {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
-                backgroundColor: Colors.green, // Cor do botão de cadastro
+                backgroundColor: Colors.purpleAccent, // Cor do botão de cadastro
               ),
               child: Text(
                 'Sign Up',
@@ -124,7 +124,7 @@ class SignUpPage extends StatelessWidget {
                 },
                 child: Text(
                   'Login',
-                  style: TextStyle(color: Colors.blue),
+                  style: TextStyle(color: Colors.purple),
                 ),
               ),
             ),
