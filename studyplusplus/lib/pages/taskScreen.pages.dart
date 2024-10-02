@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:studyplusplus/pages/login.page.dart';
+import 'package:studyplusplus/pages/aboutPage.pages.dart';
 import 'addTask.pages.dart';
 
 class TaskScreen extends StatefulWidget {
@@ -35,13 +36,32 @@ class _TaskScreenState extends State<TaskScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('You have got 5 tasks today to complete'),
-        actions: [
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('Study++'), // Título
+            SizedBox(width: 8), // Espaço entre título e botão
+            IconButton(
+              icon: CircleAvatar(
+                child: Icon(Icons.info, color: Colors.white), // Ícone 'i'
+                backgroundColor: Colors.purpleAccent, // Cor de fundo do círculo
+              ),
+              onPressed: () {
+                // Navegar para a AboutPage
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AboutPage()),
+                );
+              },
+            ),
+          ],
+        ),
+         actions: [
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: GestureDetector(
               onTap: () {
-                // Aqui, o usuário clica no avatar e é levado para a página de login
+                // Navegar para a página de login
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => LoginPage()),

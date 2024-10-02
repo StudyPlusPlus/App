@@ -1,0 +1,28 @@
+^C:\USERS\1462924\STUDY\APP\STUDYPLUSPLUS\BUILD\WINDOWS\X64\CMAKEFILES\D730BE480CF332A43560CD80EF6186A2\FLUTTER_WINDOWS.DLL.RULE
+setlocal
+"C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E env FLUTTER_ROOT=C:\Dev\flutter PROJECT_DIR=C:\Users\1462924\Study\App\studyplusplus FLUTTER_ROOT=C:\Dev\flutter FLUTTER_EPHEMERAL_DIR=C:\Users\1462924\Study\App\studyplusplus\windows\flutter\ephemeral PROJECT_DIR=C:\Users\1462924\Study\App\studyplusplus FLUTTER_TARGET=C:\Users\1462924\Study\App\studyplusplus\lib\main.dart DART_OBFUSCATION=false TRACK_WIDGET_CREATION=true TREE_SHAKE_ICONS=false PACKAGE_CONFIG=C:\Users\1462924\Study\App\studyplusplus\.dart_tool\package_config.json C:/Dev/flutter/packages/flutter_tools/bin/tool_backend.bat windows-x64 Debug
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^C:\USERS\1462924\STUDY\APP\STUDYPLUSPLUS\BUILD\WINDOWS\X64\CMAKEFILES\786BC376AD0C2A295A3F494D10736BA8\FLUTTER_ASSEMBLE.RULE
+setlocal
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^C:\USERS\1462924\STUDY\APP\STUDYPLUSPLUS\WINDOWS\FLUTTER\CMAKELISTS.TXT
+setlocal
+"C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -SC:/Users/1462924/Study/App/studyplusplus/windows -BC:/Users/1462924/Study/App/studyplusplus/build/windows/x64 --check-stamp-file C:/Users/1462924/Study/App/studyplusplus/build/windows/x64/flutter/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
