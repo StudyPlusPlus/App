@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:studyplusplus/pages/aboutPage.pages.dart';
 import 'pages/taskScreen.pages.dart';
 // import 'pages/taskScreen.pages.dart';
 
@@ -15,7 +16,8 @@ class TaskApp extends StatelessWidget {
         primaryColor: Colors.deepPurple,
         colorScheme: ColorScheme.dark(
           primary: Colors.deepPurple,
-          secondary: Colors.purpleAccent, // Use 'secondary' para a cor de destaque
+          secondary:
+              Colors.purpleAccent, // Use 'secondary' para a cor de destaque
         ),
       ),
       home: TaskScreen(),

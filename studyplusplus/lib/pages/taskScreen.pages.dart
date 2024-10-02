@@ -48,8 +48,7 @@ class _TaskScreenState extends State<TaskScreen> {
                 );
               },
               child: CircleAvatar(
-                backgroundImage: NetworkImage(
-                    'https://example.com/avatar.jpg'), // Troque pela sua URL de imagem
+                backgroundImage: NetworkImage('https://example.com/avatar.jpg'),
               ),
             ),
           ),
