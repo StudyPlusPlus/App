@@ -56,7 +56,7 @@ class _TaskScreenState extends State<TaskScreen> {
             ),
           ],
         ),
-         actions: [
+        actions: [
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: GestureDetector(
@@ -76,8 +76,7 @@ class _TaskScreenState extends State<TaskScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: ListView(
           children: [
             // Search Bar
             TextField(
