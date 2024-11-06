@@ -7,19 +7,17 @@ class DataBaseService {
 
   DataBaseService._constructor();
 
-  Future<Database> get tableUsers() async {
-    _db.query(table)
-  }
-  
+  Future<Database> get database async {
+    if (_db != null) return _db!;
 
-  Future<Database> getUsers() async {
     final databaseDirPath = await getDatabasesPath();
     final databasePath = join(databaseDirPath, "master_db.db");
-    final database = await openDatabase(
+
+    _db = await openDatabase(
       databasePath,
       version: 1,
-      onCreate: (db, version) {
-        db.execute('''
+      onCreate: (db, version) async {
+        await db.execute('''
           CREATE TABLE users (
             user_id INTEGER PRIMARY KEY AUTOINCREMENT,
             username TEXT UNIQUE NOT NULL,
@@ -27,19 +25,8 @@ class DataBaseService {
             email TEXT UNIQUE NOT NULL
           )
         ''');
-      },
-    );
-    return database;
-  }
 
-  Future<Database> getTasks() async {
-    final databaseDirPath = await getDatabasesPath();
-    final databasePath = join(databaseDirPath, "master_db.db");
-    final database = await openDatabase(
-      databasePath,
-      version: 1,
-      onCreate: (db, version) {
-        db.execute('''
+        await db.execute('''
           CREATE TABLE tasks (
             task_id INTEGER PRIMARY KEY AUTOINCREMENT,
             title TEXT NOT NULL,
@@ -50,53 +37,51 @@ class DataBaseService {
             status INTEGER DEFAULT 0,
             created_by INTEGER,
             FOREIGN KEY (created_by) REFERENCES users (user_id)
-        )
+          )
         ''');
-      },
-    );
-    return database;
-  }
 
-  Future<Database> getTaskProgress() async {
-    final databaseDirPath = await getDatabasesPath();
-    final databasePath = join(databaseDirPath, "master_db.db");
-    final database = await openDatabase(
-      databasePath,
-      version: 1,
-      onCreate: (db, version) {
-        db.execute('''
-         CREATE TABLE task_progress (
+        await db.execute('''
+          CREATE TABLE task_progress (
             progress_id INTEGER PRIMARY KEY AUTOINCREMENT,
             task_id INTEGER NOT NULL,
             date TEXT NOT NULL,
             progress_percentage REAL CHECK (progress_percentage BETWEEN 0 AND 100),
             FOREIGN KEY (task_id) REFERENCES tasks (task_id)
-          ) 
+          )
         ''');
-      },
-    );
-    return database;
-  }
 
-  Future<Database> getTaskUsers() async {
-    final databaseDirPath = await getDatabasesPath();
-    final databasePath = join(databaseDirPath, "master_db.db");
-    final database = await openDatabase(
-      databasePath,
-      version: 1,
-      onCreate: (db, version) {
-        db.execute('''
-       CREATE TABLE task_users (
+        await db.execute('''
+          CREATE TABLE task_users (
             task_id INTEGER NOT NULL,
             user_id INTEGER NOT NULL,
             role TEXT,
             PRIMARY KEY (task_id, user_id),
             FOREIGN KEY (task_id) REFERENCES tasks (task_id),
             FOREIGN KEY (user_id) REFERENCES users (user_id)
-        )
+          )
         ''');
       },
     );
-    return database;
+    return _db!;
+  }
+
+  Future<List<Map<String, dynamic>>> getUsers() async {
+    final db = await database;
+    return await db.query('users');
+  }
+
+  Future<List<Map<String, dynamic>>> getTasks() async {
+    final db = await database;
+    return await db.query('tasks');
+  }
+
+  Future<List<Map<String, dynamic>>> getTaskProgress() async {
+    final db = await database;
+    return await db.query('tasks_progress');
+  }
+
+  Future<List<Map<String, dynamic>>> getTaskUser() async {
+    final db = await database;
+    return await db.query('task_users');
   }
 }
