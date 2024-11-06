@@ -34,6 +34,7 @@ class DataBaseService {
             start_date TEXT,
             end_date TEXT,
             total_days INTEGER,
+            priority TEXT,
             status INTEGER DEFAULT 0,
             created_by INTEGER,
             FOREIGN KEY (created_by) REFERENCES users (user_id)
@@ -70,7 +71,7 @@ class DataBaseService {
     return await db.query('users');
   }
 
-  Future<List<Map<String, dynamic>>> getTasks() async {
+   Future<List<Map<String, dynamic>>> getTasks() async {
     final db = await database;
     return await db.query('tasks');
   }
@@ -84,4 +85,20 @@ class DataBaseService {
     final db = await database;
     return await db.query('task_users');
   }
+
+  Future<void> insertTask(String title, String description, String startTime, String endTime, String priority, bool alert) async {
+    final db = await database;
+    await db.insert('tasks', {
+      'title': title,
+      'description': description,
+      'start_date': startTime,
+      'end_date': endTime,
+      'priority': priority,
+      'total_days': 1, 
+      'status': 0, 
+    });
+  }
+
+
+
 }
