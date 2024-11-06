@@ -1,40 +1,35 @@
 import 'package:flutter/material.dart';
 import 'pages/taskScreen.pages.dart';
-import 'services/database_services.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'dart:io';
 
 void main() async {
-    WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized();
 
-      // Configure o databaseFactory para suportar desktop
-    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-      sqfliteFfiInit();
-      databaseFactory = databaseFactoryFfi;
-    }
+  // Configure o databaseFactory para suportar desktop
+  if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+    sqfliteFfiInit();
+    databaseFactory = databaseFactoryFfi;
+  }
 
-    runApp(const TaskApp()); 
-   
-   }
+  runApp(const TaskApp());
+}
 
 class TaskApp extends StatelessWidget {
+  const TaskApp({super.key});
 
-	const TaskApp({super.key});
-
-	@override
-	Widget build(BuildContext context) {
-		return MaterialApp(
-			debugShowCheckedModeBanner: false,
-			theme: ThemeData.dark().copyWith(
-				primaryColor: Colors.deepPurple,
-				colorScheme: const ColorScheme.dark(
-				primary: Colors.deepPurple,
-				secondary:
-					Colors.purpleAccent,
-				),
-			),
-			home: TaskScreen(),
-		);
-	}
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData.dark().copyWith(
+        primaryColor: Colors.deepPurple,
+        colorScheme: const ColorScheme.dark(
+          primary: Colors.deepPurple,
+          secondary: Colors.purpleAccent,
+        ),
+      ),
+      home: TaskScreen(),
+    );
+  }
 }

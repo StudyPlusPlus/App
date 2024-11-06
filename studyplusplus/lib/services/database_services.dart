@@ -71,7 +71,7 @@ class DataBaseService {
     return await db.query('users');
   }
 
-   Future<List<Map<String, dynamic>>> getTasks() async {
+  Future<List<Map<String, dynamic>>> getTasks() async {
     final db = await database;
     return await db.query('tasks');
   }
@@ -86,7 +86,8 @@ class DataBaseService {
     return await db.query('task_users');
   }
 
-  Future<void> insertTask(String title, String description, String startTime, String endTime, String priority, bool alert) async {
+  Future<void> insertTask(String title, String description, String startTime,
+      String endTime, String priority, bool alert) async {
     final db = await database;
     await db.insert('tasks', {
       'title': title,
@@ -94,11 +95,47 @@ class DataBaseService {
       'start_date': startTime,
       'end_date': endTime,
       'priority': priority,
-      'total_days': 1, 
-      'status': 0, 
+      'total_days': 1,
+      'status': 0,
     });
   }
 
+  Future<List<Map<String, dynamic>>> getTasksByDate(String date) async {
+    final db = await database;
+    return await db.query(
+      'tasks',
+      where: 'start_date = ?',
+      whereArgs: [date],
+    );
+  }
 
+  Future<void> updateTaskStatus(int taskId, bool isCompleted) async {
+    final db = await database;
+    await db.update(
+      'tasks',
+      {'status': isCompleted ? 1 : 0},
+      where: 'task_id = ?',
+      whereArgs: [taskId],
+    );
+  }
 
+  Future<Map<String, dynamic>> getTaskById(int taskId) async {
+    final db = await instance.database;
+    final result = await db.query(
+      'tasks',
+      where: 'task_id = ?',
+      whereArgs: [taskId],
+    );
+    return result.isNotEmpty ? result.first : {};
+  }
+
+// Função para excluir uma tarefa
+  Future<void> deleteTask(int taskId) async {
+    final db = await instance.database;
+    await db.delete(
+      'tasks',
+      where: 'task_id = ?',
+      whereArgs: [taskId],
+    );
+  }
 }

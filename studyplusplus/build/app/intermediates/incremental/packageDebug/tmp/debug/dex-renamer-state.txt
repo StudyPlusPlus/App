@@ -1,0 +1,16 @@
+#Wed Nov 06 19:37:46 BRT 2024
+base.0=C\:\\Users\\kntpr\\OneDrive\\Desktop\\Faculdade\\Project\\App\\studyplusplus\\build\\app\\intermediates\\dex\\debug\\mergeExtDexDebug\\classes.dex
+base.1=C\:\\Users\\kntpr\\OneDrive\\Desktop\\Faculdade\\Project\\App\\studyplusplus\\build\\app\\intermediates\\dex\\debug\\mergeLibDexDebug\\0\\classes.dex
+base.2=C\:\\Users\\kntpr\\OneDrive\\Desktop\\Faculdade\\Project\\App\\studyplusplus\\build\\app\\intermediates\\dex\\debug\\mergeProjectDexDebug\\0\\classes.dex
+base.3=C\:\\Users\\kntpr\\OneDrive\\Desktop\\Faculdade\\Project\\App\\studyplusplus\\build\\app\\intermediates\\dex\\debug\\mergeProjectDexDebug\\10\\classes.dex
+base.4=C\:\\Users\\kntpr\\OneDrive\\Desktop\\Faculdade\\Project\\App\\studyplusplus\\build\\app\\intermediates\\dex\\debug\\mergeProjectDexDebug\\1\\classes.dex
+path.0=classes.dex
+path.1=0/classes.dex
+path.2=0/classes.dex
+path.3=10/classes.dex
+path.4=1/classes.dex
+renamed.0=classes.dex
+renamed.1=classes2.dex
+renamed.2=classes3.dex
+renamed.3=classes4.dex
+renamed.4=classes5.dex
