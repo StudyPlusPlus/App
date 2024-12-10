@@ -55,6 +55,23 @@ class _TaskScreenState extends State<TaskScreen> {
     return completedTasks / tasks.length;
   }
 
+  Future<void> _fetchAndCreateSuggestedTask() async {
+    try {
+      final activity = await DataBaseService.instance.fetchSuggestedActivity();
+      await DataBaseService.instance.insertTask(
+        activity['activity'],
+        'Suggested by BoredAPI',
+        DateFormat('dd/MM/yyyy').format(DateTime.now()),
+        DateFormat('dd/MM/yyyy').format(DateTime.now().add(Duration(days: 1))),
+        'Medium',
+        false,
+      );
+      _loadTasks();
+    } catch (e) {
+      print('Failed to fetch activity: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     double todayProgress = _calculateCompletionPercentage(_todayTasks);
@@ -131,15 +148,26 @@ class _TaskScreenState extends State<TaskScreen> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => AddTaskScreen()),
-          );
-        },
-        child: Icon(Icons.add),
-        backgroundColor: Colors.purple,
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          FloatingActionButton(
+            onPressed: _fetchAndCreateSuggestedTask,
+            child: Icon(Icons.lightbulb),
+            backgroundColor: Colors.orange,
+          ),
+          const SizedBox(height: 10),
+          FloatingActionButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AddTaskScreen()),
+              );
+            },
+            child: Icon(Icons.add),
+            backgroundColor: Colors.purple,
+          ),
+        ],
       ),
     );
   }

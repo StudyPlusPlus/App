@@ -222,7 +222,6 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
 
     await DataBaseService.instance
         .insertTask(title, description, startDate, endDate, priority, alert);
-
     Navigator.pop(context);
 
     final List<Map<String, dynamic>> tasks =
