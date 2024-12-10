@@ -177,7 +177,7 @@ class DataBaseService {
 
   Future<Map<String, dynamic>> fetchSuggestedActivity() async {
     final response =
-        await http.get(Uri.parse('https://www.boredapi.com/api/activity'));
+        await http.get(Uri.parse('https://bored.api.lewagon.com/api/activity/'));
     if (response.statusCode == 200) {
       return json.decode(response.body);
     } else {
