@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart'; // Para formatar a data
+import 'package:speech_to_text/speech_to_text.dart'
+    as stt; // Importação do pacote de reconhecimento de fala
 import '../services/database_services.dart';
 
 // AddTaskScreen widget
@@ -17,6 +19,14 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   bool _getAlert = false;
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
+  late stt.SpeechToText _speech;
+  bool _isListening = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _speech = stt.SpeechToText();
+  }
 
   // Formata a data para exibição
   String getFormattedDate(DateTime date) {
@@ -41,12 +51,22 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text('Task Title', style: TextStyle(fontSize: 16)),
-            TextField(
-              controller: _titleController,
-              decoration: const InputDecoration(
-                hintText: 'Enter task title',
-                border: OutlineInputBorder(),
-              ),
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _titleController,
+                    decoration: const InputDecoration(
+                      hintText: 'Enter task title',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                ),
+                IconButton(
+                  icon: Icon(_isListening ? Icons.mic : Icons.mic_none),
+                  onPressed: _listen,
+                ),
+              ],
             ),
             const SizedBox(height: 20),
 
@@ -169,6 +189,26 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
         ),
       ),
     );
+  }
+
+  void _listen() async {
+    if (!_isListening) {
+      bool available = await _speech.initialize(
+        onStatus: (val) => print('onStatus: $val'),
+        onError: (val) => print('onError: $val'),
+      );
+      if (available) {
+        setState(() => _isListening = true);
+        _speech.listen(
+          onResult: (val) => setState(() {
+            _titleController.text = val.recognizedWords;
+          }),
+        );
+      }
+    } else {
+      setState(() => _isListening = false);
+      _speech.stop();
+    }
   }
 
   // Função para criar uma tarefa no banco de dados
