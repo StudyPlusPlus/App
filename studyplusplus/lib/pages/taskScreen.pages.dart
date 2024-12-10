@@ -7,6 +7,7 @@ import 'addTask.pages.dart';
 import '../services/database_services.dart';
 import 'TaskDetailScreen.pages.dart';
 import 'dart:io';
+import 'dart:typed_data';
 
 class TaskScreen extends StatefulWidget {
   const TaskScreen({super.key});
@@ -19,7 +20,7 @@ class _TaskScreenState extends State<TaskScreen> {
   List<Map<String, dynamic>> _todayTasks = [];
   List<Map<String, dynamic>> _tomorrowTasks = [];
   bool _isLoggedIn = false;
-  String? _profilePicture;
+  Uint8List? _profilePicture;
 
   @override
   void initState() {
@@ -128,7 +129,7 @@ class _TaskScreenState extends State<TaskScreen> {
               },
               child: CircleAvatar(
                 backgroundImage: _profilePicture != null
-                    ? FileImage(File(_profilePicture!))
+                    ? MemoryImage(_profilePicture!)
                     : NetworkImage('https://example.com/avatar.jpg'),
               ),
             ),
