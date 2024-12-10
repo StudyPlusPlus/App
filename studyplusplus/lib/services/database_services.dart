@@ -1,5 +1,7 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class DataBaseService {
   static Database? _db;
@@ -171,5 +173,15 @@ class DataBaseService {
 
   Map<String, dynamic> getCurrentUser() {
     return _currentUser!;
+  }
+
+  Future<Map<String, dynamic>> fetchSuggestedActivity() async {
+    final response =
+        await http.get(Uri.parse('https://www.boredapi.com/api/activity'));
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to load activity');
+    }
   }
 }
