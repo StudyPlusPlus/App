@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:studyplusplus/pages/login.page.dart';
 import 'package:studyplusplus/pages/aboutPage.pages.dart';
+import 'package:studyplusplus/pages/userInfo.page.dart';
 import 'addTask.pages.dart';
 import '../services/database_services.dart';
 import 'TaskDetailScreen.pages.dart';
@@ -16,11 +17,18 @@ class TaskScreen extends StatefulWidget {
 class _TaskScreenState extends State<TaskScreen> {
   List<Map<String, dynamic>> _todayTasks = [];
   List<Map<String, dynamic>> _tomorrowTasks = [];
+  bool _isLoggedIn = false;
 
   @override
   void initState() {
     super.initState();
+    _checkLoginStatus();
     _loadTasks();
+  }
+
+  Future<void> _checkLoginStatus() async {
+    _isLoggedIn = await DataBaseService.instance.isLoggedIn();
+    setState(() {});
   }
 
   // Função para carregar tarefas para hoje e amanhã
@@ -77,10 +85,17 @@ class _TaskScreenState extends State<TaskScreen> {
             padding: const EdgeInsets.all(8.0),
             child: GestureDetector(
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => LoginPage()),
-                );
+                if (_isLoggedIn) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => UserInfoPage()),
+                  );
+                } else {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => LoginPage()),
+                  );
+                }
               },
               child: const CircleAvatar(
                 backgroundImage: NetworkImage('https://example.com/avatar.jpg'),
