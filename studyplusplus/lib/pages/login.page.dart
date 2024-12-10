@@ -2,13 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:studyplusplus/pages/signup.page.dart';
 import 'package:studyplusplus/services/database_services.dart';
 import 'package:studyplusplus/pages/taskScreen.pages.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class LoginPage extends StatelessWidget {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final ValueNotifier<String?> _errorNotifier = ValueNotifier<String?>(null);
+  final GoogleSignIn _googleSignIn = GoogleSignIn(scopes: ['email']);
 
   LoginPage({super.key});
+
+  Future<void> _handleGoogleSignIn(BuildContext context) async {
+    try {
+      await _googleSignIn.signIn();
+      await DataBaseService.instance.authenticateWithGoogle();
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => TaskScreen()),
+      );
+    } catch (error) {
+      _errorNotifier.value = "Google Sign-In failed";
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -124,6 +139,21 @@ class LoginPage extends StatelessWidget {
               child: const Text(
                 'Login',
                 style: TextStyle(fontSize: 18, color: Colors.white),
+              ),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () => _handleGoogleSignIn(context),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              child: const Text(
+                'Sign in with Google',
+                style: TextStyle(fontSize: 18, color: Colors.black),
               ),
             ),
             const SizedBox(height: 30),

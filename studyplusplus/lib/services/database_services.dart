@@ -1,5 +1,9 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:googleapis/tasks/v1.dart' as tasks;
+import 'package:googleapis_auth/auth_io.dart';
+import 'package:http/http.dart'; // Add this import
 
 class DataBaseService {
   static Database? _db;
@@ -7,6 +11,9 @@ class DataBaseService {
   Map<String, dynamic>? _currentUser;
 
   DataBaseService._constructor();
+
+  final _googleSignIn = GoogleSignIn(scopes: [tasks.TasksApi.tasksScope]);
+  tasks.TasksApi? _tasksApi;
 
   Future<Database> get database async {
     if (_db != null) return _db!;
@@ -65,6 +72,51 @@ class DataBaseService {
       },
     );
     return _db!;
+  }
+
+  Future<void> authenticateWithGoogle() async {
+    final account = await _googleSignIn.signIn();
+    if (account != null) {
+      final authHeaders = await account.authHeaders;
+      final client = authenticatedClient(
+          Client(),
+          AccessCredentials(
+            AccessToken(
+                authHeaders['Authorization']!.split(' ')[0],
+                authHeaders['Authorization']!.split(' ')[1],
+                DateTime.now().add(Duration(hours: 1))),
+            null,
+            [tasks.TasksApi.tasksScope],
+          ));
+      _tasksApi = tasks.TasksApi(client);
+    }
+  }
+
+  Future<List<tasks.Task>> fetchGoogleTasks() async {
+    if (_tasksApi == null) {
+      await authenticateWithGoogle();
+    }
+    final taskLists = await _tasksApi!.tasklists.list();
+    final tasksList = await _tasksApi!.tasks.list(taskLists.items!.first.id!);
+    return tasksList.items ?? [];
+  }
+
+  Future<void> syncGoogleTasks() async {
+    final googleTasks = await fetchGoogleTasks();
+    final db = await database;
+    for (var task in googleTasks) {
+      await db.insert(
+          'tasks',
+          {
+            'title': task.title,
+            'description': task.notes,
+            'start_date': task.due,
+            'end_date': task.due,
+            'priority': 'Medium',
+            'status': task.status == 'completed' ? 1 : 0,
+          },
+          conflictAlgorithm: ConflictAlgorithm.replace);
+    }
   }
 
   Future<List<Map<String, dynamic>>> getUsers() async {

@@ -55,6 +55,12 @@ class _TaskScreenState extends State<TaskScreen> {
     return completedTasks / tasks.length;
   }
 
+  // Function to sync tasks with Google Tasks
+  Future<void> _syncTasksWithGoogle() async {
+    await DataBaseService.instance.syncGoogleTasks();
+    await _loadTasks();
+  }
+
   @override
   Widget build(BuildContext context) {
     double todayProgress = _calculateCompletionPercentage(_todayTasks);
@@ -81,6 +87,10 @@ class _TaskScreenState extends State<TaskScreen> {
           ],
         ),
         actions: [
+          IconButton(
+            icon: Icon(Icons.sync),
+            onPressed: _syncTasksWithGoogle,
+          ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: GestureDetector(
