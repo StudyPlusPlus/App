@@ -1,6 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
@@ -8,14 +5,8 @@ class DataBaseService {
   static Database? _db;
   static final DataBaseService instance = DataBaseService._constructor();
   Map<String, dynamic>? _currentUser;
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   DataBaseService._constructor();
-
-  Future<void> initializeFirebase() async {
-    await Firebase.initializeApp();
-  }
 
   Future<Database> get database async {
     if (_db != null) return _db!;
@@ -108,16 +99,6 @@ class DataBaseService {
       'total_days': 1,
       'status': 0,
     });
-
-    await _firestore.collection('tasks').add({
-      'title': title,
-      'description': description,
-      'start_date': startTime,
-      'end_date': endTime,
-      'priority': priority,
-      'alert': alert,
-      'created_by': _auth.currentUser?.uid,
-    });
   }
 
   Future<void> insertUser(
@@ -126,13 +107,6 @@ class DataBaseService {
     await db.insert('users', {
       'username': username,
       'password': password,
-      'email': email,
-    });
-
-    await _auth.createUserWithEmailAndPassword(
-        email: email, password: password);
-    await _firestore.collection('users').doc(_auth.currentUser?.uid).set({
-      'username': username,
       'email': email,
     });
   }
@@ -149,19 +123,7 @@ class DataBaseService {
       _currentUser = result.first;
       return _currentUser;
     }
-
-    try {
-      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
-          email: email, password: password);
-      DocumentSnapshot userDoc = await _firestore
-          .collection('users')
-          .doc(userCredential.user?.uid)
-          .get();
-      _currentUser = userDoc.data() as Map<String, dynamic>?;
-      return _currentUser;
-    } catch (e) {
-      return null;
-    }
+    return null;
   }
 
   Future<List<Map<String, dynamic>>> getTasksByDate(String date) async {
@@ -181,17 +143,6 @@ class DataBaseService {
       where: 'task_id = ?',
       whereArgs: [taskId],
     );
-
-    QuerySnapshot taskSnapshot = await _firestore
-        .collection('tasks')
-        .where('task_id', isEqualTo: taskId)
-        .get();
-    if (taskSnapshot.docs.isNotEmpty) {
-      await _firestore
-          .collection('tasks')
-          .doc(taskSnapshot.docs.first.id)
-          .update({'status': isCompleted ? 1 : 0});
-    }
   }
 
   Future<Map<String, dynamic>> getTaskById(int taskId) async {
@@ -204,6 +155,7 @@ class DataBaseService {
     return result.isNotEmpty ? result.first : {};
   }
 
+// Função para excluir uma tarefa
   Future<void> deleteTask(int taskId) async {
     final db = await instance.database;
     await db.delete(
@@ -211,21 +163,10 @@ class DataBaseService {
       where: 'task_id = ?',
       whereArgs: [taskId],
     );
-
-    QuerySnapshot taskSnapshot = await _firestore
-        .collection('tasks')
-        .where('task_id', isEqualTo: taskId)
-        .get();
-    if (taskSnapshot.docs.isNotEmpty) {
-      await _firestore
-          .collection('tasks')
-          .doc(taskSnapshot.docs.first.id)
-          .delete();
-    }
   }
 
   Future<bool> isLoggedIn() async {
-    return _auth.currentUser != null;
+    return _currentUser != null;
   }
 
   Map<String, dynamic> getCurrentUser() {

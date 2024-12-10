@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:studyplusplus/services/database_services.dart';
 import 'pages/taskScreen.pages.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'dart:io';
@@ -13,7 +12,6 @@ void main() async {
     databaseFactory = databaseFactoryFfi;
   }
 
-  await DataBaseService.instance.initializeFirebase();
   runApp(const TaskApp());
 }
 
