@@ -25,7 +25,8 @@ class DataBaseService {
             user_id INTEGER PRIMARY KEY AUTOINCREMENT,
             username TEXT UNIQUE NOT NULL,
             password TEXT NOT NULL,
-            email TEXT UNIQUE NOT NULL
+            email TEXT UNIQUE NOT NULL,
+            profile_picture TEXT
           )
         ''');
 
@@ -173,6 +174,30 @@ class DataBaseService {
 
   Map<String, dynamic> getCurrentUser() {
     return _currentUser!;
+  }
+
+  Future<void> updateUserProfilePicture(
+      int userId, String profilePicturePath) async {
+    final db = await database;
+    await db.update(
+      'users',
+      {'profile_picture': profilePicturePath},
+      where: 'user_id = ?',
+      whereArgs: [userId],
+    );
+  }
+
+  Future<String?> getUserProfilePicture(int userId) async {
+    final db = await database;
+    final result = await db.query(
+      'users',
+      columns: ['profile_picture'],
+      where: 'user_id = ?',
+      whereArgs: [userId],
+    );
+    return result.isNotEmpty
+        ? result.first['profile_picture'] as String?
+        : null;
   }
 
   Future<Map<String, dynamic>> fetchSuggestedActivity() async {

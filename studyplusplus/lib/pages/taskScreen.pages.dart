@@ -6,6 +6,7 @@ import 'package:studyplusplus/pages/userInfo.page.dart';
 import 'addTask.pages.dart';
 import '../services/database_services.dart';
 import 'TaskDetailScreen.pages.dart';
+import 'dart:io';
 
 class TaskScreen extends StatefulWidget {
   const TaskScreen({super.key});
@@ -18,17 +19,28 @@ class _TaskScreenState extends State<TaskScreen> {
   List<Map<String, dynamic>> _todayTasks = [];
   List<Map<String, dynamic>> _tomorrowTasks = [];
   bool _isLoggedIn = false;
+  String? _profilePicture;
 
   @override
   void initState() {
     super.initState();
     _checkLoginStatus();
     _loadTasks();
+    _loadProfilePicture();
   }
 
   Future<void> _checkLoginStatus() async {
     _isLoggedIn = await DataBaseService.instance.isLoggedIn();
     setState(() {});
+  }
+
+  Future<void> _loadProfilePicture() async {
+    if (_isLoggedIn) {
+      final user = DataBaseService.instance.getCurrentUser();
+      _profilePicture =
+          await DataBaseService.instance.getUserProfilePicture(user['user_id']);
+      setState(() {});
+    }
   }
 
   // Função para carregar tarefas para hoje e amanhã
@@ -106,7 +118,7 @@ class _TaskScreenState extends State<TaskScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => UserInfoPage()),
-                  );
+                  ).then((_) => _loadProfilePicture());
                 } else {
                   Navigator.push(
                     context,
@@ -114,8 +126,10 @@ class _TaskScreenState extends State<TaskScreen> {
                   );
                 }
               },
-              child: const CircleAvatar(
-                backgroundImage: NetworkImage('https://example.com/avatar.jpg'),
+              child: CircleAvatar(
+                backgroundImage: _profilePicture != null
+                    ? FileImage(File(_profilePicture!))
+                    : NetworkImage('https://example.com/avatar.jpg'),
               ),
             ),
           ),

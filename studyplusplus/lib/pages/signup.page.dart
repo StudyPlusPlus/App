@@ -1,16 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:studyplusplus/pages/login.page.dart';
 import 'package:studyplusplus/services/database_services.dart';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 
-class SignUpPage extends StatelessWidget {
+class SignUpPage extends StatefulWidget {
+  @override
+  _SignUpPageState createState() => _SignUpPageState();
+}
+
+class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
       TextEditingController();
   final ValueNotifier<String?> _errorNotifier = ValueNotifier<String?>(null);
+  File? _profileImage;
 
-  SignUpPage({super.key});
+  Future<void> _pickImage(ImageSource source) async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: source);
+
+    if (pickedFile != null) {
+      setState(() {
+        _profileImage = File(pickedFile.path);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +59,41 @@ class SignUpPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 40),
+            GestureDetector(
+              onTap: () async {
+                await showModalBottomSheet(
+                  context: context,
+                  builder: (context) => Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      ListTile(
+                        leading: Icon(Icons.camera),
+                        title: Text('Take a picture'),
+                        onTap: () {
+                          Navigator.pop(context);
+                          _pickImage(ImageSource.camera);
+                        },
+                      ),
+                      ListTile(
+                        leading: Icon(Icons.photo_library),
+                        title: Text('Choose from gallery'),
+                        onTap: () {
+                          Navigator.pop(context);
+                          _pickImage(ImageSource.gallery);
+                        },
+                      ),
+                    ],
+                  ),
+                );
+              },
+              child: CircleAvatar(
+                radius: 50,
+                backgroundImage: _profileImage != null
+                    ? FileImage(_profileImage!)
+                    : NetworkImage('https://example.com/avatar.jpg'),
+              ),
+            ),
+            const SizedBox(height: 20),
             TextFormField(
               controller: _usernameController,
               decoration: InputDecoration(
@@ -128,6 +180,18 @@ class SignUpPage extends StatelessWidget {
                     _passwordController.text,
                     _emailController.text,
                   );
+                  if (_profileImage != null) {
+                    final user = await DataBaseService.instance.validateUser(
+                      _emailController.text,
+                      _passwordController.text,
+                    );
+                    if (user != null) {
+                      await DataBaseService.instance.updateUserProfilePicture(
+                        user['user_id'],
+                        _profileImage!.path,
+                      );
+                    }
+                  }
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => LoginPage()),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'pages/taskScreen.pages.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
