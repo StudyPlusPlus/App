@@ -4,6 +4,7 @@ import 'package:path/path.dart';
 class DataBaseService {
   static Database? _db;
   static final DataBaseService instance = DataBaseService._constructor();
+  Map<String, dynamic>? _currentUser;
 
   DataBaseService._constructor();
 
@@ -100,6 +101,31 @@ class DataBaseService {
     });
   }
 
+  Future<void> insertUser(
+      String username, String password, String email) async {
+    final db = await database;
+    await db.insert('users', {
+      'username': username,
+      'password': password,
+      'email': email,
+    });
+  }
+
+  Future<Map<String, dynamic>?> validateUser(
+      String email, String password) async {
+    final db = await database;
+    final result = await db.query(
+      'users',
+      where: 'email = ? AND password = ?',
+      whereArgs: [email, password],
+    );
+    if (result.isNotEmpty) {
+      _currentUser = result.first;
+      return _currentUser;
+    }
+    return null;
+  }
+
   Future<List<Map<String, dynamic>>> getTasksByDate(String date) async {
     final db = await database;
     return await db.query(
@@ -137,5 +163,13 @@ class DataBaseService {
       where: 'task_id = ?',
       whereArgs: [taskId],
     );
+  }
+
+  Future<bool> isLoggedIn() async {
+    return _currentUser != null;
+  }
+
+  Map<String, dynamic> getCurrentUser() {
+    return _currentUser!;
   }
 }
