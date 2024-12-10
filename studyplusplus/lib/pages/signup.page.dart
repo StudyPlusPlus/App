@@ -3,6 +3,7 @@ import 'package:studyplusplus/pages/login.page.dart';
 import 'package:studyplusplus/services/database_services.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
+import 'dart:typed_data';
 
 class SignUpPage extends StatefulWidget {
   @override
@@ -16,15 +17,16 @@ class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController _confirmPasswordController =
       TextEditingController();
   final ValueNotifier<String?> _errorNotifier = ValueNotifier<String?>(null);
-  File? _profileImage;
+  Uint8List? _profileImageBytes;
 
   Future<void> _pickImage(ImageSource source) async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: source);
 
     if (pickedFile != null) {
+      final bytes = await pickedFile.readAsBytes();
       setState(() {
-        _profileImage = File(pickedFile.path);
+        _profileImageBytes = bytes;
       });
     }
   }
@@ -88,8 +90,8 @@ class _SignUpPageState extends State<SignUpPage> {
               },
               child: CircleAvatar(
                 radius: 50,
-                backgroundImage: _profileImage != null
-                    ? FileImage(_profileImage!)
+                backgroundImage: _profileImageBytes != null
+                    ? MemoryImage(_profileImageBytes!)
                     : NetworkImage('https://example.com/avatar.jpg'),
               ),
             ),
@@ -180,7 +182,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     _passwordController.text,
                     _emailController.text,
                   );
-                  if (_profileImage != null) {
+                  if (_profileImageBytes != null) {
                     final user = await DataBaseService.instance.validateUser(
                       _emailController.text,
                       _passwordController.text,
@@ -188,7 +190,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     if (user != null) {
                       await DataBaseService.instance.updateUserProfilePicture(
                         user['user_id'],
-                        _profileImage!.path,
+                        _profileImageBytes!,
                       );
                     }
                   }

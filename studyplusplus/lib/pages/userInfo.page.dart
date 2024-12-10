@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import '../services/database_services.dart';
@@ -9,7 +10,7 @@ class UserInfoPage extends StatefulWidget {
 }
 
 class _UserInfoPageState extends State<UserInfoPage> {
-  File? _profileImage;
+  Uint8List? _profileImageBytes;
   Map<String, dynamic>? user;
 
   @override
@@ -21,11 +22,11 @@ class _UserInfoPageState extends State<UserInfoPage> {
 
   Future<void> _loadProfileImage() async {
     if (user != null) {
-      final profilePicturePath = await DataBaseService.instance
+      final profilePictureBytes = await DataBaseService.instance
           .getUserProfilePicture(user!['user_id']);
-      if (profilePicturePath != null) {
+      if (profilePictureBytes != null) {
         setState(() {
-          _profileImage = File(profilePicturePath);
+          _profileImageBytes = profilePictureBytes;
         });
       }
     }
@@ -36,12 +37,13 @@ class _UserInfoPageState extends State<UserInfoPage> {
     final pickedFile = await picker.pickImage(source: source);
 
     if (pickedFile != null) {
+      final bytes = await pickedFile.readAsBytes();
       setState(() {
-        _profileImage = File(pickedFile.path);
+        _profileImageBytes = bytes;
       });
       await DataBaseService.instance.updateUserProfilePicture(
         user!['user_id'],
-        pickedFile.path,
+        bytes,
       );
     }
   }
@@ -86,8 +88,8 @@ class _UserInfoPageState extends State<UserInfoPage> {
               },
               child: CircleAvatar(
                 radius: 50,
-                backgroundImage: _profileImage != null
-                    ? FileImage(_profileImage!)
+                backgroundImage: _profileImageBytes != null
+                    ? MemoryImage(_profileImageBytes!)
                     : NetworkImage('https://example.com/avatar.jpg'),
               ),
             ),

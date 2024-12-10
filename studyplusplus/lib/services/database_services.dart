@@ -1,6 +1,7 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'dart:convert';
+import 'dart:typed_data';
 import 'package:http/http.dart' as http;
 
 class DataBaseService {
@@ -177,17 +178,18 @@ class DataBaseService {
   }
 
   Future<void> updateUserProfilePicture(
-      int userId, String profilePicturePath) async {
+      int userId, Uint8List profilePictureBytes) async {
     final db = await database;
+    final profilePictureBase64 = base64Encode(profilePictureBytes);
     await db.update(
       'users',
-      {'profile_picture': profilePicturePath},
+      {'profile_picture': profilePictureBase64},
       where: 'user_id = ?',
       whereArgs: [userId],
     );
   }
 
-  Future<String?> getUserProfilePicture(int userId) async {
+  Future<Uint8List?> getUserProfilePicture(int userId) async {
     final db = await database;
     final result = await db.query(
       'users',
@@ -195,14 +197,15 @@ class DataBaseService {
       where: 'user_id = ?',
       whereArgs: [userId],
     );
-    return result.isNotEmpty
-        ? result.first['profile_picture'] as String?
-        : null;
+    if (result.isNotEmpty && result.first['profile_picture'] != null) {
+      return base64Decode(result.first['profile_picture'] as String);
+    }
+    return null;
   }
 
   Future<Map<String, dynamic>> fetchSuggestedActivity() async {
-    final response =
-        await http.get(Uri.parse('https://bored.api.lewagon.com/api/activity/'));
+    final response = await http
+        .get(Uri.parse('https://bored.api.lewagon.com/api/activity/'));
     if (response.statusCode == 200) {
       return json.decode(response.body);
     } else {
